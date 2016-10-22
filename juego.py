@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #Importamos las siguientes librerias
 import sys, pygame
 from pygame.locals import *
 #Tamaño de la ventana 
 WIDTH = 820
 HEIGHT = 700
+        
 #Movimiento de imagen .png vertical y horizontalmente  
 class Bola(pygame.sprite.Sprite):
     def __init__(self):
@@ -14,7 +14,7 @@ class Bola(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = WIDTH / 2
         self.rect.centery = HEIGHT / 2
-        self.speed = [0.5, -0.5]
+        self.speed = [0.8, -0.8]
  
 
     def actualizar(self, time, persona1):
@@ -23,10 +23,11 @@ class Bola(pygame.sprite.Sprite):
         if self.rect.left <= 0 or self.rect.right >= WIDTH:
             self.speed[0] = -self.speed[0]
             self.rect.centerx += self.speed[0] * time
+            self.rect.centery += self.speed[1] * time
         if self.rect.top <= 0 or self.rect.bottom >= HEIGHT:
             self.speed[1] = -self.speed[1]
             self.rect.centery += self.speed[1] * time
- 
+            self.rect.centerx += self.speed[0] * time
         if pygame.sprite.collide_rect(self, persona1):
             self.speed[0] = -self.speed[0]
             self.rect.centerx += self.speed[0] * time
@@ -35,6 +36,7 @@ class Bola(pygame.sprite.Sprite):
             self.speed[0] = -self.speed[0]
             self.rect.centerx += self.speed[0] * time
             self.rect.centery += self.speed[0] * time
+            finalizarJuego(self)
  
 class Persona(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -44,7 +46,7 @@ class Persona(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.rect.centery = y
         self.speed = 0.5
- #Movimiento de la imagen hacia arriba abajo derecha y izquierda 
+#Movimiento de la imagen hacia arriba abajo derecha y izquierda 
     def mover(self, time, keys):
         if self.rect.top >= 0:
             if keys[K_UP]:
@@ -91,7 +93,25 @@ def main():
         screen.blit(bola.image, bola.rect)
         pygame.display.flip()
     return 0
+def finalizarJuego(self):
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption("Juego evita la bola")
+    pygame.display.set_icon(pygame.image.load('imagenes/ana.jpg'))
  
+    background_image = load_image('imagenes/ana3.png')
+
+    while True:
+        for eventos in pygame.event.get():
+            if eventos.type == QUIT:
+                sys.exit(0)
+        screen.blit(background_image, (0, 0))
+        keys = pygame.key.get_pressed()
+        if keys[K_SPACE]:
+            pygame.init()
+            main()
+        pygame.display.flip()
+    pygame.init()
+    main()
 if __name__ == '__main__':
     pygame.init()
     main()
